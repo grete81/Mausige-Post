@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mausipost</title>
+    <!-- Google Fonts: Whimsy-Goth / Vintage Vibes -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=IM+Fell+English+SC&family=Special+Elite&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome für Ornamente und Symbole -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0c0910;
+            --container-bg: #141019;
+            --parchment: #f4ebd0;
+            --parchment-dark: #e3d5b1;
+            --text-main: #3a2e2b;
+            --accent-gold: #c5a880;
+            --accent-red: #5c1d24;
+            --border-color: #4a3b4f;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 50%, #1c1524 0%, #0c0910 100%);
+            color: var(--parchment);
+            font-family: 'Cormorant Garamond', serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .page-wrapper {
+            max-width: 700px;
+            width: 100%;
+            background: var(--container-bg);
+            border: 2px solid var(--border-color);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(0, 0, 0, 0.5);
+            padding: 40px 30px;
+            position: relative;
+            border-radius: 4px;
+        }
+
+        /* Ecken-Ornamente */
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--accent-gold);
+            pointer-events: none;
+        }
+        .top-left { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .top-right { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .bottom-right { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .quote-main {
+            font-family: 'IM Fell English SC', serif;
+            font-size: 1.6rem;
+            color: var(--accent-gold);
+            margin: 0 0 10px 0;
+            text-shadow: 0 0 10px rgba(197, 168, 128, 0.3);
+        }
+
+        .quote-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: #bfaea3;
+            margin: 0 0 15px 0;
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 2.2rem;
+            color: #f7f0e8;
+            margin: 10px 0;
+            letter-spacing: 2px;
+        }
+
+        .divider-ornament {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+            margin: 15px 0;
+        }
+
+        /* UMSCHLAG & BRIEF ANIMATION */
+        .envelope-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope-container:hover {
+            transform: scale(1.02);
+        }
+
+        .envelope {
+            width: 320px;
+            height: 210px;
+            background: #231b2b;
+            border: 2px solid var(--accent-gold);
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            border-radius: 3px;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 110px solid #2d2338;
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out;
+            z-index: 3;
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45px;
+            height: 45px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            border: 2px solid #802732;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 1.3rem;
+            color: #fce8cc;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            z-index: 4;
+            transition: opacity 0.3s;
+        }
+
+        .envelope.open .wax-seal {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .envelope-hint {
+            margin-top: 15px;
+            font-family: 'IM Fell English SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent-gold);
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* BRIEF ANSICHT */
+        .letter-paper {
+            background-color: var(--parchment);
+            color: var(--text-main);
+            padding: 40px;
+            border-radius: 2px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            position: relative;
+            display: none;
+            animation: fadeIn 1s ease forwards;
+            background-image: linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(0,0,0,0.05));
+            font-size: 1.15rem;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .letter-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #c8b99d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-family: 'Special Elite', cursive;
+            font-size: 0.9rem;
+            color: #5c4a42;
+        }
+
+        .letter-body p {
+            margin-bottom: 20px;
+        }
+
+        .letter-footer-note {
+            margin-top: 30px;
+            font-style: italic;
+            text-align: right;
+        }
+
+        .close-letter-btn {
+            display: block;
+            margin: 25px auto 0 auto;
+            background: transparent;
+            border: 1px solid var(--text-main);
+            color: var(--text-main);
+            padding: 8px 20px;
+            font-family: 'IM Fell English SC', serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-letter-btn:hover {
+            background: var(--text-main);
+            color: var(--parchment);
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 1rem;
+            color: var(--accent-gold);
+            font-family: 'IM Fell English SC', serif;
+            letter-spacing: 1px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 20px;
+        }
+
+        footer span {
+            display: inline-block;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <!-- Dekorative Ecken -->
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+
+        <header>
+            <p class="quote-main">Von einer maus zur anderen.</p>
+            <p class="quote-sub">Post für die Maus die in See sticht</p>
+            <div class="divider-ornament"><i class="fa-solid fa-feather"></i></div>
+            <h1>Mausipost</h1>
+        </header>
+
+        <!-- Umschlag (Startansicht) -->
+        <div class="envelope-container" id="envelopeContainer" onclick="openLetter()">
+            <div class="envelope" id="envelope">
+                <div class="envelope-flap"></div>
+                <div class="wax-seal">R</div>
+            </div>
+            <div class="envelope-hint">hier öffnen bitti</div>
+        </div>
+
+        <!-- Der Brief (erscheint nach dem Öffnen) -->
+        <div class="letter-paper" id="letterPaper">
+            <div class="letter-header">
+                <span id="letterDate">Aktueller Brief</span>
+                <span><i class="fa-solid fa-anchor"></i> Auf hoher See</span>
+            </div>
+            <div class="letter-body" id="letterContent">
+                <!-- HIER TRÄGST DU DEINEN TEXT EIN -->
+                <p>Hallo mein kleiner Seefahrer,</p>
+                <p>wenn wir uns jetzt so lange nicht sehen bekommst du auf andere art und weise von mir zu hören (ich hoffe ich komme überhaupt mit sowas klar bitte erwarte nicht zu viel von mir).</p>
+                <p>Ich wünsche dir eine gute Reise, pass gut auf dich auf und vergiss nicht, wie sehr ich an dich denke.</p>
+                <div class="letter-footer-note">
+                    In Liebe,<br>deine Maus
+                </div>
+            </div>
+            <button class="close-letter-btn" onclick="closeLetter(event)">Umschlag wieder schließen</button>
+        </div>
+
+        <footer>
+            <span>i miss you</span> • <span>komm heile wieder Horst</span>
+        </footer>
+    </div>
+
+    <script>
+        function openLetter() {
+            const envelope = document.getElementById('envelope');
+            const container = document.getElementById('envelopeContainer');
+            const letter = document.getElementById('letterPaper');
+
+            envelope.classList.add('open');
+            
+            setTimeout(() => {
+                container.style.display = 'none';
+                letter.style.display = 'block';
+            }, 500); // Wartet bis die Klappe aufgeklappt ist
+        }
+
+        function closeLetter(event) {
+            event.stopPropagation();
+            const envelope = document.getElementById('envelope');
+            const container = document.getElementById('envelopeContainer');
+            const letter = document.getElementById('letterPaper');
+
+            letter.style.display = 'none';
+            container.style.display = 'flex';
+            envelope.classList.remove('open');
+        }
+    </script>
+
+</body>
+</html>
