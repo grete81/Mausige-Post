@@ -222,21 +222,94 @@
             text-align: right;
         }
 
-        .close-letter-btn {
-            display: block;
-            margin: 25px auto 0 auto;
+        /* BUTTONS */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
             background: transparent;
             border: 1px solid var(--text-main);
             color: var(--text-main);
-            padding: 8px 20px;
+            padding: 10px 20px;
             font-family: 'IM Fell English SC', serif;
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .close-letter-btn:hover {
+        .action-btn:hover {
             background: var(--text-main);
             color: var(--parchment);
+        }
+
+        .action-btn.reply-btn {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+            font-weight: bold;
+        }
+
+        .action-btn.reply-btn:hover {
+            background: var(--accent-red);
+            color: var(--parchment);
+        }
+
+        /* ANTWORT FORMULAR */
+        .reply-section {
+            display: none;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px dashed #c8b99d;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .reply-section h3 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 1.4rem;
+            text-align: center;
+            color: var(--accent-red);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: 'IM Fell English SC', serif;
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--text-main);
+        }
+
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid #a89980;
+            border-radius: 2px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            background: #fff;
         }
 
         /* FOOTER */
@@ -291,15 +364,44 @@
             <div class="letter-body" id="letterContent">
                 <!-- HIER TRÄGST DU DEINEN TEXT EIN -->
                 <p>Hallo meine kleine Seefahrerin,</p>
-                <p>wenn wir uns jetzt so lange nicht sehen bekommst du eben auf andere art und weise von mir zu hören (ich hoffe ich komme überhaupt mit sowas klar bitte erwarte nicht zu viel von mir).</p>
-                <p>Ich wünsche dir eine gute Reise, pass gut auf dich auf und vergiss nicht, wie sehr ich an dich denke.
-                PS: davon werden jetzt immer mal n paar kommen wenn ich hier völlig durchgeblickt habe und mich vielleicht wieder n bissl besser dran erinner, wie wir das damals im Unterricht gemacht haben. 
-                PS.PS: ich will alles von deinem ersten Tag hören. Ich hab dich grad gestalked und dein wo ist hat seit ner Stunde nicht geupdated. Das lässt mich die Schlussfolgerung ziehen, dasss du wohlig in der Luft bist und alles wie am Schnürchen gelaufen ist. Du pisser hast mir ja nicht nochmal geantwortet.</p>
+                <p>wenn wir uns jetzt so lange nicht sehen bekommst du eben auf andere art und weise von mir zu hören.</p>
+                <p>Ich wünsche dir eine gute Reise, pass gut auf dich auf und vergiss nicht, wie sehr ich an dich denke.</p>
+                <p>PS: davon werden jetzt immer mal n paar kommen wenn ich hier völlig durchgeblickt habe.</p>
+                <p>PS.PS: ich will alles von deinem ersten Tag hören. Ich hab dich grad gestalked und dein wo du bist gesehn.</p>
                 <div class="letter-footer-note">
                     Ne Spaß, Hab dich lieb<br>deine Maus Grete.
                 </div>
             </div>
-            <button class="close-letter-btn" onclick="closeLetter(event)">Umschlag wieder schließen</button>
+
+            <!-- BUTTONS UNTER DEM BRIEF -->
+            <div class="btn-group">
+                <button class="action-btn reply-btn" onclick="toggleReplyForm()">✍️ Liebespost antworten</button>
+                <button class="action-btn" onclick="closeLetter(event)">Umschlag schließen</button>
+            </div>
+
+            <!-- ANTWORT FORMULAR FOR DIE MAUS AUF DEM SCHIFF -->
+            <div class="reply-section" id="replySection">
+                <h3><i class="fa-solid fa-envelope-open-text"></i> Post vom Schiff verfassen</h3>
+                <!-- ERSETZE DIE URL BEI ACTION MIT DEINEM FORMSPREE-LINK -->
+                <form action="https://formspree.io/f/DEINE_FORM_ID" method="POST">
+                    <div class="form-group">
+                        <label for="title">Betreff / Titel des Briefes:</label>
+                        <input type="text" id="title" name="title" placeholder="z. B. Grüße aus dem Sturm..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Dein Brieftext:</label>
+                        <textarea id="message" name="message" placeholder="Schreib deiner Heimatsmaus alles was du erlebst..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="closing">Schlussgruß:</label>
+                        <input type="text" id="closing" name="closing" placeholder="z. B. In Liebe, deine Seefahrerin">
+                    </div>
+                    <button type="submit" class="action-btn reply-btn" style="width: 100%; margin-top: 10px;">
+                        <i class="fa-solid fa-paper-plane"></i> Pergament abschicken
+                    </button>
+                </form>
+            </div>
+
         </div>
 
         <footer>
@@ -318,7 +420,7 @@
             setTimeout(() => {
                 container.style.display = 'none';
                 letter.style.display = 'block';
-            }, 500); // Wartet bis die Klappe aufgeklappt ist
+            }, 500);
         }
 
         function closeLetter(event) {
@@ -330,6 +432,19 @@
             letter.style.display = 'none';
             container.style.display = 'flex';
             envelope.classList.remove('open');
+            
+            // Antwortformular einklappen beim Schließen
+            document.getElementById('replySection').style.display = 'none';
+        }
+
+        function toggleReplyForm() {
+            const replySection = document.getElementById('replySection');
+            if (replySection.style.display === 'block') {
+                replySection.style.display = 'none';
+            } else {
+                replySection.style.display = 'block';
+                replySection.scrollIntoView({ behavior: 'smooth' });
+            }
         }
     </script>
 
